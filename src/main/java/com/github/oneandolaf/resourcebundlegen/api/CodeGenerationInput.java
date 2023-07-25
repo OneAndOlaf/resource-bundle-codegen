@@ -85,29 +85,62 @@ public final class CodeGenerationInput {
             this.packageName = packageName;
         }
 
+        /**
+         * Uses a static field for the resource bundle.
+         *
+         * @return {@code this}, for chaining
+         * @see BundleSource#STATIC
+         */
         public Builder withStaticBundle() {
             return withCustomBundle(BundleSource.STATIC);
         }
 
+        /**
+         * Uses an injected instance field for the resource bundle.
+         *
+         * @return {@code this}, for chaining
+         * @see BundleSource#INJECTED
+         */
         public Builder withInjectedBundle() {
             return withCustomBundle(BundleSource.INJECTED);
         }
 
+        /**
+         * Uses a custom {@link BundleSource}.
+         *
+         * @param bundleSource the source to use
+         * @return {@code this}, for chaining
+         */
         public Builder withCustomBundle(BundleSource bundleSource) {
             this.bundleSource = bundleSource;
             return this;
         }
 
-
+        /**
+         * Disables parameter parsing.
+         *
+         * @return {@code this}, for chaining
+         */
         public Builder withNoParameters() {
             return withCustomParameters(ParameterSyntax.NONE);
         }
 
+        /**
+         * Uses custom parameter parsing.
+         *
+         * @param syntax the parameter syntax to use
+         * @return {@code this}, for chaining
+         */
         public Builder withCustomParameters(ParameterSyntax syntax) {
             this.parameterSyntax = syntax;
             return this;
         }
 
+        /**
+         * Creates the actual {@link CodeGenerationInput}.
+         *
+         * @return the created instance
+         */
         public CodeGenerationInput build() {
             return new CodeGenerationInput(
                     bundleBasePath,
