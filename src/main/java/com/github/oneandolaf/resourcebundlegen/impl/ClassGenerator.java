@@ -1,7 +1,7 @@
 package com.github.oneandolaf.resourcebundlegen.impl;
 
 import com.github.oneandolaf.resourcebundlegen.api.ClassGenContext;
-import com.github.oneandolaf.resourcebundlegen.api.CodeGeneratorSettings;
+import com.github.oneandolaf.resourcebundlegen.api.CodeGenerationInput;
 import com.github.oneandolaf.resourcebundlegen.impl.util.JavaIdentifiers;
 
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import java.util.Set;
 
 public final class ClassGenerator {
 
-    private final CodeGeneratorSettings settings;
+    private final CodeGenerationInput settings;
 
-    public ClassGenerator(CodeGeneratorSettings settings) {
+    public ClassGenerator(CodeGenerationInput settings) {
         this.settings = settings;
     }
 
@@ -30,12 +30,12 @@ public final class ClassGenerator {
                 .append("package ").append(context.packageName()).append(";\n\n");
 
         builder.append(
-                settings.bundleSource().isInstantiable()
+                settings.getBundleSource().isInstantiable()
                         ? "public class "
                         : "public final class ")
                 .append(context.simpleClassName()).append(" {\n\n");
 
-        var fieldDecls = settings.bundleSource().getFieldDecls(context);
+        var fieldDecls = settings.getBundleSource().getFieldDecls(context);
 
         for (String fieldDecl : fieldDecls) {
             builder.append("    ")
@@ -47,12 +47,12 @@ public final class ClassGenerator {
             builder.append("\n");
         }
 
-        if (!settings.bundleSource().isInstantiable()) {
+        if (!settings.getBundleSource().isInstantiable()) {
             builder.append("    private ")
                     .append(context.simpleClassName())
                     .append("() {\n        // hide constructor\n    }\n\n");
         } else {
-            var constructorDecls = settings.bundleSource().getConstructorDecls(context);
+            var constructorDecls = settings.getBundleSource().getConstructorDecls(context);
 
             for (String constructorDecl : constructorDecls) {
                 builder.append(constructorDecl.trim().indent(4))
@@ -84,13 +84,17 @@ public final class ClassGenerator {
         sortedI18nKeys.sort(Comparator.naturalOrder());
 
         for (String i18nKey : sortedI18nKeys) {
-            String getterName = JavaIdentifiers.toGetter(i18nKey);
+            String getterName = JavaIdentifiers.toJavaIdentifier(i18nKey);
 
-            builder.append("    public String ")
+
+
+            builder.append("    public")
+                    .append(settings.getBundleSource().isStaticAccess() ? " static" : "")
+                    .append(" String ")
                     .append(getterName)
                     .append("() {\n")
                     .append("        return ")
-                    .append(settings.bundleSource().generateKeyAccessor(i18nKey))
+                    .append(settings.getBundleSource().generateKeyAccessor(i18nKey))
                     .append(";\n")
                     .append("    }\n\n");
         }

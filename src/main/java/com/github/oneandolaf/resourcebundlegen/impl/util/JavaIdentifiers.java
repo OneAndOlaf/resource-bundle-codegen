@@ -6,6 +6,12 @@ public final class JavaIdentifiers {
         // hide constructor
     }
 
+
+    public static String toJavaIdentifier(String key) {
+        return key;
+    }
+
+
     public static String toGetter(String key) {
 
         String upperCaseKey = key.substring(0, 1).toUpperCase() + key.substring(1);

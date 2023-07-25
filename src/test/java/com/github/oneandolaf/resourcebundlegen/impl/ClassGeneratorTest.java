@@ -1,8 +1,7 @@
 package com.github.oneandolaf.resourcebundlegen.impl;
 
 import com.github.oneandolaf.resourcebundlegen.api.ClassGenContext;
-import com.github.oneandolaf.resourcebundlegen.api.CodeGeneratorSettings;
-import com.github.oneandolaf.resourcebundlegen.api.bundlesources.BundleSource;
+import com.github.oneandolaf.resourcebundlegen.api.CodeGenerationInput;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -15,11 +14,13 @@ class ClassGeneratorTest {
 
     @Test
     void testEmpty() {
-        String text = new ClassGenerator(new CodeGeneratorSettings(
-                BundleSource.STATIC
-        )).generateClassText(
+        var settings = CodeGenerationInput.builder("", "org.example")
+                .withStaticBundle()
+                .build();
+
+        String text = new ClassGenerator(settings).generateClassText(
                 new ClassGenContext(
-                        "org.example",
+                        settings,
                         "Foo",
                         "Bundle"
                 ),
@@ -48,11 +49,13 @@ class ClassGeneratorTest {
 
     @Test
     void testSinglePropStatic() {
-        String text = new ClassGenerator(new CodeGeneratorSettings(
-                BundleSource.STATIC
-        )).generateClassText(
+        var settings = CodeGenerationInput.builder("", "org.example")
+                .withStaticBundle()
+                .build();
+
+        String text = new ClassGenerator(settings).generateClassText(
                 new ClassGenContext(
-                        "org.example",
+                        settings,
                         "Foo",
                         "Bundle"
                 ),
@@ -74,7 +77,7 @@ class ClassGeneratorTest {
                                         // hide constructor
                                     }
                                                         
-                                    public String getKey1() {
+                                    public static String key1() {
                                         return BUNDLE.getString("key1");
                                     }
                                                         
@@ -85,11 +88,13 @@ class ClassGeneratorTest {
 
     @Test
     void testSinglePropInjected() {
-        String text = new ClassGenerator(new CodeGeneratorSettings(
-                BundleSource.INJECTED
-        )).generateClassText(
+        var settings = CodeGenerationInput.builder("", "org.example")
+                .withInjectedBundle()
+                .build();
+
+        String text = new ClassGenerator(settings).generateClassText(
                 new ClassGenContext(
-                        "org.example",
+                        settings,
                         "Foo",
                         "Bundle"
                 ),
@@ -111,7 +116,7 @@ class ClassGeneratorTest {
                                         this.bundle = bundle;
                                     }
                                                         
-                                    public String getKey1() {
+                                    public String key1() {
                                         return bundle.getString("key1");
                                     }
                                                         

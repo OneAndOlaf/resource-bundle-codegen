@@ -18,8 +18,7 @@ class PropertyFileLoaderTest {
     void simpleTest() throws IOException {
 
         var map = PropertyFileLoader.loadPropertyFiles(
-                testPath("bundles/noparams"),
-                "Bundle1"
+                ResourceBundlePath.get(testPath("bundles/noparams").resolve("Bundle1.properties"))
         );
 
         assertThat(map, aMapWithSize(2));
@@ -43,8 +42,7 @@ class PropertyFileLoaderTest {
         void exceptionThrownForInvalidDirectory() {
             var ex = assertThrows(IllegalArgumentException.class, () -> {
                 PropertyFileLoader.loadPropertyFiles(
-                        testPath("bundles/noparams").resolve("foo"),
-                        "Bundle"
+                        ResourceBundlePath.get(testPath("bundles/noparams").resolve("foo").resolve("Bundle.properties"))
                 );
             });
 

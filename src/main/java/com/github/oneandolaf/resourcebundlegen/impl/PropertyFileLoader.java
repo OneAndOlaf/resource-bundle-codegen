@@ -16,9 +16,11 @@ public final class PropertyFileLoader {
     }
 
     public static Map<String, Properties> loadPropertyFiles(
-            Path directory,
-            String baseFileName
+            ResourceBundlePath bundlePath
     ) throws IOException {
+
+        var directory = bundlePath.dir();
+        var baseFileName = bundlePath.baseName();
 
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(

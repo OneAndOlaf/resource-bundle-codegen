@@ -1,8 +1,13 @@
 package com.github.oneandolaf.resourcebundlegen.api;
 
 public record ClassGenContext(
-        String packageName,
+        CodeGenerationInput settings,
         String simpleClassName,
         String resourceBundlePath
 ) {
+
+    public String packageName() {
+        return settings().getPackageName();
+    }
+
 }
